@@ -33,6 +33,10 @@ else
   pip_binary = "/usr/local/bin/pip"
 end
 
+chef_gem 'version' do
+  action :nothing
+end.run_action(:install)
+
 cookbook_file "#{Chef::Config[:file_cache_path]}/get-pip.py" do
   source 'get-pip.py'
   mode "0644"
@@ -50,6 +54,11 @@ end
 python_pip 'pip' do
   action :upgrade
   version node['python']['pip_version']
+end
+
+python_pip 'yolk' do
+  action :upgrade
+  version node['python']['yolk_version']
 end
 
 python_pip 'setuptools' do

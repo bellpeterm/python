@@ -20,6 +20,7 @@
 
 require 'chef/mixin/shell_out'
 require 'chef/mixin/language'
+require 'version'
 include Chef::Mixin::ShellOut
 
 def whyrun_supported?
@@ -117,11 +118,28 @@ def current_installed_version
 end
 
 def candidate_version
+  yolk_path = which_yolk(new_resource)
   @candidate_version ||= begin
-    # `pip search` doesn't return versions yet
-    # `pip list` may be coming soon:
-    # https://bitbucket.org/ianb/pip/issue/197/option-to-show-what-version-would-be
-    new_resource.version||'latest'
+    # if yolk is installed, check if a newer version is available in PyPi
+    # then check if newer version is greater then the version specified by new_resource
+    # return as appropriate
+    if ::File.exists?(yolk_path) then
+      out = shell_out("#{yolk_path} -U #{new_resource.package_name}").stdout
+      if out.match(/not installed/) then
+        new_resource.version||'latest'
+      elsif out.match(/#{new_resource.package_name} [\d\.]+ \([\d\.]+\)/) then
+        available_version = Version.new(out.split(' ').last.tr('()',''))
+        if available_version > ( Version.new(new_resource.version) || Version.new('0.0') )
+          new_resource.version
+        else
+          available_version
+        end
+      else
+        current_installed_version
+      end
+    else
+      new_resource.version||'latest'
+    end
   end
 end
 
@@ -164,5 +182,15 @@ def which_pip(nr)
     node['python']['pip_location']
   else
     'pip'
+  end
+end
+
+def which_yolk(nr)
+  if (nr.respond_to?("virtualenv") && nr.virtualenv)
+    ::File.join(nr.virtualenv,'/bin/yolk')
+  elsif ::File.exists?(node['python']['yolk_location'])
+    node['python']['yolk_location']
+  else
+    'yolk'
   end
 end
