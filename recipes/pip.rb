@@ -33,7 +33,7 @@ else
   pip_binary = "/usr/local/bin/pip"
 end
 
-chef_gem 'version' do
+chef_gem 'versionub' do
   action :nothing
 end.run_action(:install)
 
