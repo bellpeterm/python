@@ -20,7 +20,6 @@
 
 require 'chef/mixin/shell_out'
 require 'chef/mixin/language'
-require 'chef/sugar/core_extensions'
 include Chef::Mixin::ShellOut
 
 def whyrun_supported?
