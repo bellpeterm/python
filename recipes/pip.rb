@@ -23,7 +23,7 @@
 # redhat/package: /usr/bin/pip (sha a8a3a3)
 # omnibus/source: /opt/local/bin/pip (sha 29ce9874)
 
-include_recipe 'chef_sugar::default'
+include_recipe 'chef-sugar::default'
 require 'chef/sugar/core_extensions'
 
 if node['python']['install_method'] == 'source'
