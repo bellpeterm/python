@@ -2,6 +2,8 @@ site :opscode
 
 metadata
 
+cookbook "chef-sugar"
+
 group :integration do
   cookbook "minitest-handler"
   cookbook "apt"

@@ -33,10 +33,6 @@ else
   pip_binary = "/usr/local/bin/pip"
 end
 
-chef_gem 'versionub' do
-  action :nothing
-end.run_action(:install)
-
 cookbook_file "#{Chef::Config[:file_cache_path]}/get-pip.py" do
   source 'get-pip.py'
   mode "0644"

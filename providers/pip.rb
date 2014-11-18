@@ -20,7 +20,7 @@
 
 require 'chef/mixin/shell_out'
 require 'chef/mixin/language'
-require 'versionub'
+require 'chef/sugar/core_extensions'
 include Chef::Mixin::ShellOut
 
 def whyrun_supported?
@@ -128,10 +128,17 @@ def candidate_version
       if out.match(/not installed/) then
         new_resource.version||'latest'
       elsif out.match(/#{new_resource.package_name} [\d\.]+ \([\d\.]+\)/) then
+<<<<<<< HEAD
         available_version = Versionub.parse(out.split(' ').last.tr('()',''))
         if ! new_resource.version
           available_version.to_s
         elsif available_version > Versionub.parse(new_resource.version)
+=======
+        available_version = out.split(' ').last.tr('()','')
+        if ! new_resource.version
+          available_version
+        elsif available_version.satisfies?(">= #{new_resource.version}")
+>>>>>>> check_upgrade
           new_resource.version
         else
           available_version.to_s

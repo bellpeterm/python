@@ -7,6 +7,7 @@ version           "1.4.7"
 
 depends           "build-essential"
 depends           "yum-epel"
+depends           "chef-sugar"
 
 recipe "python", "Installs python, pip, and virtualenv"
 recipe "python::package", "Installs python using packages."
