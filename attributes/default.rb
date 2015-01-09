@@ -44,5 +44,5 @@ default['python']['virtualenv_location'] = "#{node['python']['prefix_dir']}/bin/
 default['python']['setuptools_version'] = nil # defaults to latest
 default['python']['virtualenv_version'] = nil
 default['python']['pip_version'] = nil
-default['python']['yolk_version'] = nil
+default['python']['yolk_version'] = "0.4.2"
 default['python']['yolk_location'] = "#{node['python']['prefix_dir']}/bin/yolk"
