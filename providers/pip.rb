@@ -152,11 +152,12 @@ def install_package(version)
   else
     version = "==#{version}"
   end
+  new_resource.options "#{new_resource.options} --egg"
   pip_cmd('install', version)
 end
 
 def upgrade_package(version)
-  new_resource.options "#{new_resource.options} --upgrade"
+  new_resource.options "#{new_resource.options} --upgrade --egg"
   install_package(version)
 end
 
