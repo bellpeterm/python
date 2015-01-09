@@ -36,9 +36,10 @@ else
   pip_binary = "/usr/local/bin/pip"
 end
 
-cookbook_file "#{Chef::Config[:file_cache_path]}/get-pip.py" do
-  source 'get-pip.py'
+remote_file "#{Chef::Config[:file_cache_path]}/get-pip.py" do
+  source 'https://bootstrap.pypa.io/get-pip.py'
   mode "0644"
+  action :create_if_missing
   not_if { ::File.exists?(pip_binary) }
 end
 
