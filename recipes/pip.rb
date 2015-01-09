@@ -51,17 +51,32 @@ execute "install-pip" do
   not_if { ::File.exists?(pip_binary) }
 end
 
+remote_file "#{Chef::Config[:file_cache_path]}/ez_setup.py" do
+  source 'https://bootstrap.pypa.io/ez_setup.py'
+  mode "0644"
+  action :create_if_missing
+  not_if { ::File.exists?(pip_binary) }
+end
+
+execute "install-setuptools" do
+  cwd Chef::Config[:file_cache_path]
+  command <<-EOF
+  #{node['python']['binary']} ez_setup.py
+  EOF
+  not_if { ::File.exists?(pip_binary) }
+end
+
 python_pip 'pip' do
   action :upgrade
   version node['python']['pip_version']
 end
 
-python_pip 'yolk' do
-  action :upgrade
-  version node['python']['yolk_version']
-end
-
 python_pip 'setuptools' do
   action :upgrade
   version node['python']['setuptools_version']
+end
+
+python_pip 'yolk' do
+  action :upgrade
+  version node['python']['yolk_version']
 end
