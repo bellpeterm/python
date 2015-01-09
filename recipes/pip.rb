@@ -40,7 +40,7 @@ remote_file "#{Chef::Config[:file_cache_path]}/get-pip.py" do
   source 'https://bootstrap.pypa.io/get-pip.py'
   mode "0644"
   action :create_if_missing
-  not_if { ::File.exists?(pip_binary) }
+  notifies :run, 'execute[install-pip]', :immediately
 end
 
 execute "install-pip" do
@@ -48,14 +48,14 @@ execute "install-pip" do
   command <<-EOF
   #{node['python']['binary']} get-pip.py
   EOF
-  not_if { ::File.exists?(pip_binary) }
+  action :nothing
 end
 
 remote_file "#{Chef::Config[:file_cache_path]}/ez_setup.py" do
   source 'https://bootstrap.pypa.io/ez_setup.py'
   mode "0644"
   action :create_if_missing
-  not_if { ::File.exists?(pip_binary) }
+  notifies :run, 'execute[install-setuptools]', :immediately
 end
 
 execute "install-setuptools" do
@@ -63,7 +63,7 @@ execute "install-setuptools" do
   command <<-EOF
   #{node['python']['binary']} ez_setup.py
   EOF
-  not_if { ::File.exists?(pip_binary) }
+  action :nothing
 end
 
 python_pip 'pip' do
